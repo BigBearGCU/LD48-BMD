@@ -9,11 +9,34 @@ public class GridScript : MonoBehaviour {
 	public GameObject[] tilePrefabs;
 
 	public int[] tileValues;
-	public string testLevelName;
-	public MagnetScript topMagnet;
-	public MagnetScript leftMagnet;
+	public string currentLevelName;
+	public int noOfPixelsToFill;
 
-	public void LoadFromFile(string filename)
+	public void LoadLevel()
+	{
+		LoadFromFile(Application.dataPath+"/"+currentLevelName+".txt");
+	}
+
+	public bool CanPlace(int row,int column)
+	{
+		return transform.FindChild(row.ToString()+","+column.ToString()).gameObject.transform.childCount>0;
+	}
+
+	public bool Place(int row,int column,GameObject fullPixel)
+	{
+		Transform place=transform.FindChild(row.ToString()+","+column.ToString()).gameObject.transform;
+		fullPixel.transform.position=place.position;
+		place.DetachChildren();
+		noOfPixelsToFill--;
+		return true;
+	}
+
+	public bool GridComplete()
+	{
+		return noOfPixelsToFill==0;
+	}
+
+	void LoadFromFile(string filename)
 	{
 		if (System.IO.File.Exists(filename)){
 			string[] levelText=System.IO.File.ReadAllLines(filename);
@@ -27,8 +50,10 @@ public class GridScript : MonoBehaviour {
 				{
 					int currentIndex=row+(columns*NoOfRows);
 					tileValues[currentIndex]=int.Parse(tileIDs[columns]);
+					noOfPixelsToFill++;
 				}
 			}
+			populateMap();
 		}
 		else
 		{
@@ -66,17 +91,13 @@ public class GridScript : MonoBehaviour {
 
 	public GameObject GetPixel(int row,int column)
 	{
-		if (row <NoOfRows && column<NoOfColumns)
+		if ((row <NoOfRows && row>=0) && (column>=0 && column<NoOfColumns))
 			return transform.FindChild(row.ToString()+","+column.ToString()).gameObject;
 		return null;
 	}
 
 	// Use this for initialization
 	void Start () {
-		LoadFromFile(Application.dataPath+"/"+testLevelName+".txt");
-		populateMap();
-		topMagnet.maxForce=NoOfRows-1;
-		leftMagnet.maxForce=NoOfColumns-1;
 	}
 	
 	// Update is called once per frame
