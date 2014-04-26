@@ -77,6 +77,8 @@ public class GameScript : MonoBehaviour {
 		grid.LoadLevel();
 		topMagnet.maxForce=grid.NoOfRows-1;
 		leftMagnet.maxForce=grid.NoOfColumns-1;
+		gun.targetPixelColumn=0;
+		gun.targetPixelRow=0;
 		startedGame=true;
 		currentGameState=GameState.PlayingLevel;
 	}

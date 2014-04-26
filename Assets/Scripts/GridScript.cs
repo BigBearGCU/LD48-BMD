@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class GridScript : MonoBehaviour {
 
@@ -7,6 +8,7 @@ public class GridScript : MonoBehaviour {
 	public int NoOfColumns;
 
 	public GameObject[] tilePrefabs;
+	public Transform answerTiles;
 
 	public int[] tileValues;
 	public string currentLevelName;
@@ -14,7 +16,12 @@ public class GridScript : MonoBehaviour {
 
 	public void LoadLevel()
 	{
-		LoadFromFile(Application.dataPath+"/"+currentLevelName+".txt");
+		TextAsset level=(TextAsset)Resources.Load(currentLevelName);
+		Debug.Log(level.text);
+		string[] levelText=level.text.Split(new string[]{"\n","\r\n","\r"},StringSplitOptions.None);
+	
+		BuildGrd(levelText);
+
 	}
 
 	public bool CanPlace(int row,int column)
@@ -26,8 +33,10 @@ public class GridScript : MonoBehaviour {
 	{
 		Transform place=transform.FindChild(row.ToString()+","+column.ToString()).gameObject.transform;
 		fullPixel.transform.position=place.position;
-		place.DetachChildren();
+		fullPixel.transform.parent=answerTiles;
+		Destroy(place.GetChild(0).gameObject);
 		noOfPixelsToFill--;
+
 		return true;
 	}
 
@@ -36,24 +45,40 @@ public class GridScript : MonoBehaviour {
 		return noOfPixelsToFill==0;
 	}
 
+	void BuildGrd(string[] levelText)
+	{
+		NoOfRows=levelText.Length;
+		NoOfColumns=levelText[0].Split(',').Length;
+		tileValues=new int[NoOfRows*NoOfColumns];
+		for(int row=0;row<levelText.Length;++row)
+		{
+			string[] tileIDs=levelText[row].Split(',');
+			for (int columns=0;columns<NoOfColumns;++columns)
+			{
+				int currentIndex=row+(columns*NoOfRows);
+				tileValues[currentIndex]=int.Parse(tileIDs[columns]);
+
+			}
+		}
+		populateMap();
+	}
+
+	void LoadFromWWW(string url)
+	{
+		WWW request=new WWW(url);
+		while(!request.isDone)
+		{
+
+		}
+
+		string[] levelText=request.text.Split('\n');
+		BuildGrd(levelText);
+	}
 	void LoadFromFile(string filename)
 	{
 		if (System.IO.File.Exists(filename)){
 			string[] levelText=System.IO.File.ReadAllLines(filename);
-			NoOfRows=levelText.Length;
-			NoOfColumns=levelText[0].Split(',').Length;
-			tileValues=new int[NoOfRows*NoOfColumns];
-			for(int row=0;row<levelText.Length;++row)
-			{
-				string[] tileIDs=levelText[row].Split(',');
-				for (int columns=0;columns<NoOfColumns;++columns)
-				{
-					int currentIndex=row+(columns*NoOfRows);
-					tileValues[currentIndex]=int.Parse(tileIDs[columns]);
-					noOfPixelsToFill++;
-				}
-			}
-			populateMap();
+			BuildGrd(levelText);
 		}
 		else
 		{
@@ -63,6 +88,11 @@ public class GridScript : MonoBehaviour {
 
 	void populateMap()
 	{
+		for(int i=0;i<transform.childCount;++i)
+		{
+			Destroy(transform.GetChild(i).gameObject);
+		}
+
 		Vector3 startPos=transform.position;
 		startPos.x-=NoOfColumns/2;
 		startPos.y+=NoOfRows/2;
@@ -84,8 +114,13 @@ public class GridScript : MonoBehaviour {
 				placeHolder.name=currentRow.ToString()+","+currentColumn.ToString();
 				placeHolder.transform.position=pos;
 				placeHolder.transform.parent=obj.transform;
+				noOfPixelsToFill++;
 
 			}
+		}
+		for(int i=0;i<answerTiles.childCount;++i)
+		{
+			Destroy(answerTiles.GetChild(i).gameObject);
 		}
 	}
 

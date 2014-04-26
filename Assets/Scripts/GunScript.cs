@@ -16,6 +16,7 @@ public class GunScript : MonoBehaviour {
 	public GameScript game;
 
 	// Use this for initialization
+
 	void Start () {
 		SetTarget(targetPixelRow,targetPixelColumn);
 		InvokeRepeating("CheckFire",0.1f,2.0f);
