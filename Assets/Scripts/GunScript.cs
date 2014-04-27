@@ -16,6 +16,7 @@ public class GunScript : MonoBehaviour {
 	public GameScript game;
 	public float updateGunSpeed=2.0f;
 	public ParticleSystem particleSystem;
+	public AudioClip hurtSound;
 
 	// Use this for initialization
 
@@ -46,7 +47,11 @@ public class GunScript : MonoBehaviour {
 		GameObject obj=grid.GetPixel(row,column);
 		if (obj!=null)
 			targetPixel.transform.position=obj.transform.position;
-
+		if (grid.HitDeadPixel(row,column))
+		{
+			audio.PlayOneShot(hurtSound);
+			game.SubtractScore(1);
+		}
 
 	}
 	

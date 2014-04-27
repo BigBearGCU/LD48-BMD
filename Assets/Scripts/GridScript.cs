@@ -13,6 +13,7 @@ public class GridScript : MonoBehaviour {
 	public int[] tileValues;
 	public string currentLevelName;
 	public int noOfPixelsToFill;
+	public Transform deadPixelholder;
 
 	public void LoadLevel()
 	{
@@ -27,6 +28,16 @@ public class GridScript : MonoBehaviour {
 	public bool CanPlace(int row,int column)
 	{
 		return transform.FindChild(row.ToString()+","+column.ToString()).gameObject.transform.childCount>0;
+	}
+
+	public bool HitDeadPixel(int row,int column)
+	{
+		if (deadPixelholder.childCount>0)
+		{
+			if (deadPixelholder.FindChild(row.ToString()+","+column.ToString())!=null)
+				return true;
+		}
+		return false;
 	}
 
 	public Transform Place(int row,int column,GameObject fullPixel)
@@ -93,6 +104,12 @@ public class GridScript : MonoBehaviour {
 			Destroy(transform.GetChild(i).gameObject);
 		}
 
+		for(int i=0;i<deadPixelholder.childCount;++i)
+		{
+			Destroy(deadPixelholder.GetChild(i).gameObject);
+		}
+
+
 		Vector3 startPos=transform.position;
 		startPos.x-=NoOfColumns/2;
 		startPos.y+=NoOfRows/2;
@@ -116,6 +133,13 @@ public class GridScript : MonoBehaviour {
 				placeHolder.transform.parent=obj.transform;
 				noOfPixelsToFill++;
 
+			}
+			if (tileValues[i]==2)
+			{
+				GameObject placeHolder=(GameObject)Instantiate(tilePrefabs[2]);
+				placeHolder.name=currentRow.ToString()+","+currentColumn.ToString();
+				placeHolder.transform.position=pos;
+				placeHolder.transform.parent=deadPixelholder;
 			}
 		}
 		for(int i=0;i<answerTiles.childCount;++i)

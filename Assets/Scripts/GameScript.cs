@@ -48,6 +48,7 @@ public class GameScript : MonoBehaviour {
 			currentTime-=Time.deltaTime;
 			if (grid.GridComplete() || currentTime<0)
 			{
+				audio.Play();
 				currentGameState=GameState.EndLevel;
 				EndLevel();
 			}
@@ -65,12 +66,15 @@ public class GameScript : MonoBehaviour {
 			gun.gameObject.SetActive(false);
 			if (Input.GetButtonDown("Continue"))
 			{
-				if(currentLevelNumber>levelNames.Count-1)
+				if(currentLevelNumber<levelNames.Count)
 				{
+					Debug.Log("Start New Level");
 					StartLevel();
 				}
 				else
 				{
+
+					Debug.Log("Load Scores");
 					PlayerPrefs.SetInt("Score",currentScore);
 					Application.LoadLevel("ScoreScreen");
 				}
