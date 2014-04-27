@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class MagnetScript : MonoBehaviour {
 
@@ -9,6 +10,8 @@ public class MagnetScript : MonoBehaviour {
 
 	public Material OnMaterial;
 	public Material OffMaterial;
+
+
 
 	// Use this for initialization
 	void Start () {
@@ -34,7 +37,6 @@ public class MagnetScript : MonoBehaviour {
 		renderer.material=OnMaterial;
 		if (!audio.isPlaying){
 			audio.Play();
-			audio.time=2.0f;
 		}
 	}
 

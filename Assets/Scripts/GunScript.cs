@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
+
 
 public class GunScript : MonoBehaviour {
 
@@ -15,10 +15,12 @@ public class GunScript : MonoBehaviour {
 	public MagnetScript leftMagnet;
 	public GameScript game;
 	public float updateGunSpeed=2.0f;
+	public ParticleSystem particleSystem;
 
 	// Use this for initialization
 
 	void Start () {
+		particleSystem.gameObject.SetActive(false);
 		SetTarget(targetPixelRow,targetPixelColumn);
 		InvokeRepeating("CheckFire",0.1f,updateGunSpeed);
 	}
@@ -29,9 +31,12 @@ public class GunScript : MonoBehaviour {
 		{
 			if (grid.CanPlace(targetPixelRow,targetPixelColumn))
 			{
-				grid.Place(targetPixelRow,targetPixelColumn,(GameObject)Instantiate(actualPixel));
+				Transform t=grid.Place(targetPixelRow,targetPixelColumn,(GameObject)Instantiate(actualPixel));
 				audio.Play();
 				game.AddScore(1);
+				particleSystem.gameObject.transform.position=t.position;
+				particleSystem.gameObject.SetActive(true);
+				particleSystem.Play();
 			}
 		}
 	}

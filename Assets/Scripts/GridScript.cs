@@ -29,7 +29,7 @@ public class GridScript : MonoBehaviour {
 		return transform.FindChild(row.ToString()+","+column.ToString()).gameObject.transform.childCount>0;
 	}
 
-	public bool Place(int row,int column,GameObject fullPixel)
+	public Transform Place(int row,int column,GameObject fullPixel)
 	{
 		Transform place=transform.FindChild(row.ToString()+","+column.ToString()).gameObject.transform;
 		fullPixel.transform.position=place.position;
@@ -37,7 +37,7 @@ public class GridScript : MonoBehaviour {
 		Destroy(place.GetChild(0).gameObject);
 		noOfPixelsToFill--;
 
-		return true;
+		return fullPixel.transform;
 	}
 
 	public bool GridComplete()
