@@ -65,7 +65,7 @@ public class GameScript : MonoBehaviour {
 			gun.gameObject.SetActive(false);
 			if (Input.GetButtonDown("Continue"))
 			{
-				if(currentLevelNumber<levelNames.Count-1)
+				if(currentLevelNumber>levelNames.Count-1)
 				{
 					StartLevel();
 				}
