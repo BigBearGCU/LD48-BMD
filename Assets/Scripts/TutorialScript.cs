@@ -35,6 +35,10 @@ public class TutorialScript : GameScript {
 	void Update()
 	{
 		states[(int)tutorialState].OnUpdate();
+		if (Input.GetKeyDown(KeyCode.Escape))
+		{
+			Application.LoadLevel("MainMenu");
+		}
 	}
 
 	new public void Start()
