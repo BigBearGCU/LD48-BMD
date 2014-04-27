@@ -35,7 +35,7 @@ public class GameScript : MonoBehaviour {
 	public string restartMsg="Press C to Continue or R to Restart Level";
 
 	// Use this for initialization
-	void Start () {
+	public void Start () {
 		StartGame();
 		gameText.text=restartMsg;
 		gameText.renderer.sortingOrder=3;
