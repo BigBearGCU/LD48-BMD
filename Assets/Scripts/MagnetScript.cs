@@ -3,6 +3,7 @@ using System.Collections;
 
 public class MagnetScript : MonoBehaviour {
 
+	public bool fired=false;
 	public int currentForce=0;
 	public int maxForce=10;
 
@@ -18,22 +19,32 @@ public class MagnetScript : MonoBehaviour {
 	void Update () {
 		if (Input.GetButtonDown(gameObject.name+"Pos"))
 		{
-			currentForce=1;
-
-		}
-		else if (Input.GetButtonDown(gameObject.name+"Neg"))
-		{
-			currentForce=0;
+			fired=!fired;
 		}
 
-		if (currentForce>0)
-		{
-			renderer.material=OnMaterial;
-		}
+		if(fired)
+			Fire();
 		else
-			renderer.material=OffMaterial;
+			Stop();
 	}
 
+	void Fire()
+	{
+		currentForce=1;
+		renderer.material=OnMaterial;
+		if (!audio.isPlaying){
+			audio.Play();
+			audio.time=2.0f;
+		}
+	}
+
+	void Stop()
+	{
+		currentForce=0;
+		renderer.material=OffMaterial;
+		audio.Stop();
+		audio.time=2.0f;
+	}
 	void OnGUI()
 	{
 		//percentage, position

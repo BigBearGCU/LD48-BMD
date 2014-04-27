@@ -14,12 +14,13 @@ public class GunScript : MonoBehaviour {
 	public MagnetScript topMagnet;
 	public MagnetScript leftMagnet;
 	public GameScript game;
+	public float updateGunSpeed=2.0f;
 
 	// Use this for initialization
 
 	void Start () {
 		SetTarget(targetPixelRow,targetPixelColumn);
-		InvokeRepeating("CheckFire",0.1f,2.0f);
+		InvokeRepeating("CheckFire",0.1f,updateGunSpeed);
 	}
 	
 	// Update is called once per frame
@@ -29,6 +30,7 @@ public class GunScript : MonoBehaviour {
 			if (grid.CanPlace(targetPixelRow,targetPixelColumn))
 			{
 				grid.Place(targetPixelRow,targetPixelColumn,(GameObject)Instantiate(actualPixel));
+				audio.Play();
 				game.AddScore(1);
 			}
 		}
