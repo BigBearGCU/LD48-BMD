@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class GameScript : MonoBehaviour {
 
+	//Game State
 	public enum GameState
 	{
 		StartLevel=0,
